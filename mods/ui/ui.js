@@ -8,6 +8,10 @@ import modernUI from './settings.js';
 import resolveCommand, { patchResolveCommand } from '../resolveCommand.js';
 import { pipToFullscreen } from '../features/pictureInPicture.js';
 import getCommandExecutor from './customCommandExecution.js';
+import { initAdvancedCodecs } from '../features/advancedCodecs.js';
+
+// Initialize low-level media hooks as early as possible
+initAdvancedCodecs();
 
 // It just works, okay?
 const interval = setInterval(() => {
