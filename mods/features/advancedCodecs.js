@@ -41,6 +41,11 @@ function hookMediaSource() {
             return false;
         }
 
+        // If it's AVC/VP9 and not disabled, we should ideally return true to ensure high res availability
+        // Some Tizen versions report no support for high profile AVC even though they support it.
+        if (!disableAVC && (lowerType.includes('avc') || lowerType.includes('avc1'))) return true;
+        if (!disableVP9 && (lowerType.includes('vp9') || lowerType.includes('vp09'))) return true;
+
         return originalIsTypeSupported.call(window.MediaSource, type);
     };
 
@@ -65,6 +70,9 @@ function hookMediaSource() {
 
         const fpsMatch = /framerate=(\d+)/.exec(lowerType) || /fps=(\d+)/.exec(lowerType);
         if (disable60fps && fpsMatch && parseInt(fpsMatch[1]) > 30) return '';
+
+        if (!disableAVC && (lowerType.includes('avc') || lowerType.includes('avc1'))) return 'probably';
+        if (!disableVP9 && (lowerType.includes('vp9') || lowerType.includes('vp09'))) return 'probably';
 
         return originalCanPlayType.call(this, type);
     };
